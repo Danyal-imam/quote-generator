@@ -1,24 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
+import React,{useState, useEffect} from 'react';
 import './App.css';
+import axios from 'axios'
 
 function App() {
+
+  const [quote, setQoute]= useState("")
+  const [author, setAuthor]= useState("")
+
+  const quoteApi = async() =>{
+    try {
+      const data = await axios.get('http://api.quotable.io/random')
+      setAuthor(data.data.author)
+      setQoute(data.data.content)
+
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(()=>{
+    quoteApi()
+  },[])
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="parent_div">
+      <div className="center_div">
+        <p className="quote"><span>“</span> {quote} <span>“</span></p>
+        <p className="author">- {author}</p>
+        <button onClick={quoteApi}>new Quote</button>
+      </div>
     </div>
   );
 }
